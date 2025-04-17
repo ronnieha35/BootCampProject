@@ -27,6 +27,8 @@ namespace BootCampProject
                             emailcliente:"motrisa@gmail.com",espersonanatural:false,idestado:1,fechacreacion:DateTime.Parse("16-04-2025"), fechamodificacion:null),
             };
 
+            
+
 
             Console.WriteLine("==== LISTA DE ESTADOS ====");
             foreach (var estado in estados)
