@@ -6,16 +6,20 @@ using System.Threading.Tasks;
 
 namespace Repaso.Models
 {
-    public class Vendedor : ITrabajador
+    public class Vendedor : Trabajador, ITrabajador
     {
-        public string Nombre { get; set; }
-        public decimal SueldoBase { get; set; }
+        public Vendedor(string nombre, decimal sueldo) : base(nombre, sueldo)
+        {
+        }
+
+        public override decimal CalcularBonificacion()
+        {
+            throw new NotImplementedException();
+        }
 
         public decimal CalcularComision(decimal sueldo)
         {
-
-
-
+            
             return sueldo * 0.10M + sueldo;
         }
     }
