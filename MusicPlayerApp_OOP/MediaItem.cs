@@ -52,7 +52,7 @@ namespace MusicPlayerApp_OOP
         {
             Console.WriteLine($"  Title: {Title}");
             Console.WriteLine($"  Creator: {CreatorInfo}"); // Uses the abstract property implemented by derived class
-            Console.WriteLine($"  Duration: {Duration:mm\\:ss}"); // Format as minutes:seconds
+            Console.WriteLine($"  Duration: {Duration:hh\\:mm\\:ss}"); // Format as minutes:seconds
         }
 
         

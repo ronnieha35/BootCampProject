@@ -6,105 +6,85 @@ namespace MusicPlayerApp_OOP
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Welcome to the Console Music Player!");
+            Console.WriteLine("Welcome to the Console Media Player!");
             Console.WriteLine("Demonstrating OOP Concepts...");
+            Console.WriteLine("Choose player : music / video");
+            Console.Write("> ");
 
-            // --- Object Creation ---
-            // We are creating instances ('objects') of our defined classes.
-            // Each object encapsulates its own data.
+            string option = Console.ReadLine()?.ToLower();
 
-            // Create some Song objects
-            // OOP Concept: Instantiation. Creating objects from the Song class blueprint.
-            var song1 = new Song("Bohemian Rhapsody", "Queen", "A Night at the Opera", TimeSpan.FromMinutes(5.9));
-            var song2 = new Song("Stairway to Heaven", "Led Zeppelin", "Led Zeppelin IV", TimeSpan.FromMinutes(8.0));
-            var song3 = new Song("Hotel California", "Eagles", "Hotel California", TimeSpan.FromMinutes(6.5));
-            var song4 = new Song("Like a Rolling Stone", "Bob Dylan", "Highway 61 Revisited", TimeSpan.FromMinutes(6.2));
+            //Instancia Compartida para ambos tipos
+            List <IPlayable> playlist;
 
-            // Create an AudioBook object
-            var audioBook1 = new AudioBook("The Hobbit", "J.R.R. Tolkien", "Rob Inglis", TimeSpan.FromHours(11.1));
-
-            // --- Using the Player ---
-            // Create an instance of the MusicPlayer
-            // OOP Concept: Encapsulation. We interact with the player through its public methods
-            // (LoadPlaylist, Play, Stop, etc.), without needing to know the internal details
-            // of how it manages the playlist or playback state.
-            var player = new MusicPlayer();
-
-            // Create a list of playable items (demonstrates Polymorphism storage)
-            // OOP Concept: Polymorphism. This list holds objects of different types
-            // (Song, AudioBook) because they all implement the IPlayable interface
-            // or inherit from the MediaItem base class which implements IPlayable.
-            var myPlaylist = new List<IPlayable> // List of the common interface/base type
+            if (option == "music")
             {
-                song1,
-                song2,
-                audioBook1, // We can mix types!
-                song3,
-                song4
-            };
-
-            // Load the list into the player
-            player.LoadPlaylist(myPlaylist, "My Mixed Favorites");
-
-            // --- User Interaction Loop ---
-            string command = "";
-
-
-            while (command?.ToLower() != "exit")
+                playlist = new List<IPlayable>()
+                {
+                    new Song("Bohemian Rhapsody", "Queen", "A Night at the Opera", TimeSpan.FromMinutes(5.9)),
+                    new Song("Stairway to Heaven", "Led Zeppelin", "Led Zeppelin IV", TimeSpan.FromMinutes(8.0)),
+                    new Song("Hotel California", "Eagles", "Hotel California", TimeSpan.FromMinutes(6.5)),
+                    new AudioBook("The Hobbit", "J.R.R. Tolkien", "Rob Inglis", TimeSpan.FromHours(11.1))
+                };
+            }
+            else if (option == "video")
             {
-                Console.WriteLine("\n--------------------");
-                Console.WriteLine("Enter command: play, stop, next, prev, info, list, exit");
-                Console.Write("> ");
-                command = Console.ReadLine()?.ToLower(); // Read user input
-
-                try
+                playlist = new List<IPlayable>()
                 {
-                    switch (command)
-                    {
-                        case "play":
-                            player.Play();
-                            break;
-                        case "stop":
-                            player.Stop();
-                            break;
-                        case "next":
-                            player.Next();
-                            break;
-                        case "prev": // 'prev' for previous
-                            player.Previous();
-                            break;
-                        case "info":
-                            player.DisplayCurrentItemInfo();
-                            break;
-                        case "list":
-                            player.DisplayPlaylist();
-                            break;
-                        case "exit":
-                            Console.WriteLine("Exiting Music Player. Goodbye!");
-                            break;
-                        default:
-                            Console.WriteLine("Unknown command.");
-                            break;
-                    }
-                }
-                catch (Exception ex)
-                {
-
-                    // Catch potential errors from our classes (like null arguments)
-                    Console.WriteLine($"An error occurred: {ex.Message}");
-                }
+                     new Video("shawshank redemption", "Frank Darabont", TimeSpan.FromMinutes(222), "1080p"),
+                     new Video("Interstellar", "Christopher Nolan", TimeSpan.FromMinutes(169), "4K"),
+                     new Video("The Matrix", "Wachowskis Brothers", TimeSpan.FromMinutes(136), "1080p"),
+                     new Video("El Pianista", "Roman Polanski", TimeSpan.FromMinutes(230), "1080p"),
+                     new Video("Oppenheimer", "Christopher Nolan", TimeSpan.FromMinutes(300), "8K"),
+                };
+            }
+            else
+            {
+                Console.WriteLine("Invalid Option. ");
+                return;
             }
 
-            Console.WriteLine("\n--- OOP Concepts Demonstrated ---");
-            Console.WriteLine(
-                "1. Encapsulation: MusicPlayer hides its internal state (_playlist, _currentIndex, _isPlaying) and exposes controlled actions (Play, Stop, LoadPlaylist). Song/AudioBook bundle data (title, artist/author) with behavior (Play, DisplayDetails).");
-            Console.WriteLine(
-                "2. Abstraction: The IPlayable interface defines a contract for 'what' playable items can do (Play, DisplayDetails, Title) without specifying 'how'. MediaItem provides an abstract base, hiding some common details.");
-            Console.WriteLine(
-                "3. Inheritance: Song and AudioBook 'inherit' common properties (Title, Duration) and potentially behavior (default DisplayDetails) from the MediaItem base class, promoting code reuse.");
-            Console.WriteLine(
-                "4. Polymorphism: The List<IPlayable> holds different types (Song, AudioBook). When player.Play() is called, the correct Play() method (Song.Play or AudioBook.Play) is executed based on the actual object type (runtime polymorphism). The player interacts with them uniformly via the IPlayable contract/MediaItem base.");
-            Console.WriteLine("-----------------------------------");
+            //Usar el mismo reproductor
+            var player = new MusicPlayer();
+            player.LoadPlaylist(playlist, option.ToUpper());
+
+            string command;
+
+            do
+            {
+                Console.WriteLine("\nCommands: play, stop, next, prev, info, list, exit");
+                Console.Write("> ");
+                command = Console.ReadLine()?.ToLower();
+
+                switch (command)
+                {
+                    case "play": 
+                        player.Play(); 
+                        break;
+                    case "stop": 
+                        player.Stop(); 
+                        break;
+                    case "next": 
+                        player.Next(); 
+                        break;
+                    case "prev": 
+                        player.Previous(); 
+                        break;
+                    case "info": 
+                        player.DisplayCurrentItemInfo(); 
+                        break;
+                    case "list": 
+                        player.DisplayPlaylist(); 
+                        break;
+                    case "exit": 
+                        Console.WriteLine("👋 Goodbye!"); 
+                        break;
+                    default: 
+                        Console.WriteLine("⚠️ Unknown command."); 
+                        break;
+                }
+            } while (command != "exit");
+
+
         }
     }
 }
