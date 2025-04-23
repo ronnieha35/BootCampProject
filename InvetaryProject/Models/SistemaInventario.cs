@@ -7,8 +7,17 @@
         private List<Producto> _productos = new List<Producto>();
         private List<MovimientoStock> _movimientos = new List<MovimientoStock>();
 
+        #region Movimiento Stock
+        public void AgregarMovimientoStock(MovimientoStock movimientoStock)
+        {
+            _movimientos.Add(movimientoStock);
+        }
 
-
+        public List<MovimientoStock> ObtenerMovimientos()
+        {
+            return _movimientos.ToList();
+        }
+        #endregion
         #region Empleados
         //Metodo para agregar un tipo empleado
         public void AgregarTipoEmpleado(TipoEmpleado tipoEmpleado)

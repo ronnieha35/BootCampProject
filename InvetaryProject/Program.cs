@@ -34,7 +34,7 @@
                             GestionProductos(sistema);
                             break;
                         case "3":
-                            MovimientosStock(sistema);
+                            GestionarMovimientos(sistema);
                             break;
                         case "4":
                             MostrarReportes(sistema);
@@ -60,12 +60,213 @@
             throw new NotImplementedException();
         }
 
-        private static void MovimientosStock(SistemaInventario sistema)
+
+
+        #region Movimientos de Stock
+        private static void GestionarMovimientos(SistemaInventario sistema)
         {
-            throw new NotImplementedException();
+            bool regresar = false;
+
+            while (!regresar)
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Green;
+
+                Console.WriteLine("************ GESTION DE MOVIMIENTOS ************");
+
+                Console.WriteLine("\n MENU DE MOVIMIENTOS\n");
+
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("  [1] Generar Movimiento");
+                Console.WriteLine("  [2] Listar todos los movimientos");
+                Console.WriteLine("  [0] Volver al Menú Principal\n");
+
+
+
+                try
+                {
+                    int tecla = int.Parse(Console.ReadLine());
+
+                    switch (tecla)
+                    {
+                        case 1:
+                            GenerarMovimientos(sistema);
+                            break;
+                        case 2:
+                            ListarMovimientos(sistema);
+                            break;
+                        case 0:
+                            regresar = true;
+                            break;
+                        default:
+                            Console.WriteLine("Opcion invalida");
+                            Console.ReadKey();
+                            break;
+                    }
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+
+
+            }
         }
 
-       
+        private static void ListarMovimientos(SistemaInventario sistema)
+        {
+            Console.Clear();
+            Console.WriteLine("=== HISTORIAL DE MOVIMIENTOS DE STOCK ===\n");
+
+            var movimientos = sistema.ObtenerMovimientos();
+
+            if (movimientos.Count == 0)
+            {
+                Console.WriteLine("⚠ No hay movimientos registrados.");
+                Console.ReadKey();
+                return;
+            }
+
+            // Encabezado
+            Console.WriteLine("{0,-5} {1,-20} {2,-20} {3,-15} {4,-10} {5,-12}",
+                "ID", "Producto", "Empleado", "Tipo Movimiento", "Cantidad", "Fecha");
+
+            Console.WriteLine(new string('-', 90));
+
+            // Detalle
+            foreach (var m in movimientos)
+            {
+                Console.WriteLine("{0,-5} {1,-20} {2,-20} {3,-15} {4,-10} {5,-12}",
+                    m.Id,
+                    m.Producto.Nombre,
+                    m.Empleado.Nombre,
+                    m.tipoMovimiento,
+                    m.Cantidad,
+                    m.FechaCreacion.ToShortDateString());
+            }
+
+            Console.WriteLine("\nPresione cualquier tecla para continuar...");
+            Console.ReadKey();
+        }
+
+        private static void GenerarMovimientos(SistemaInventario sistema)
+        {
+            Console.Clear();
+            Console.WriteLine("=== REGISTRAR MOVIMIENTO DE STOCK ===\n");
+
+            // Mostrar productos disponibles
+            var productos = sistema.ObtenerProductos();
+            if (productos.Count == 0)
+            {
+                Console.WriteLine(" No hay productos registrados.");
+                Console.ReadKey();
+                return;
+            }
+
+            Console.WriteLine("Seleccione un producto:\n");
+            for (int i = 0; i < productos.Count; i++)
+            {
+                Console.WriteLine($"[{i + 1}] {productos[i].Nombre} (SKU: {productos[i].Sku}) - Stock: {productos[i].Stock}");
+            }
+
+            Console.Write("\nIngrese la opción del producto: ");
+            if (!int.TryParse(Console.ReadLine(), out int opcionProducto) || opcionProducto < 1 || opcionProducto > productos.Count)
+            {
+                Console.WriteLine(" Selección inválida.");
+                Console.ReadKey();
+                return;
+            }
+
+            var productoSeleccionado = productos[opcionProducto - 1];
+
+            // Seleccionar empleado
+            var empleados = sistema.ObtenerEmpleados();
+            if (empleados.Count == 0)
+            {
+                Console.WriteLine(" No hay empleados registrados.");
+                Console.ReadKey();
+                return;
+            }
+
+            Console.WriteLine("\nSeleccione el empleado que realiza el movimiento:\n");
+            for (int i = 0; i < empleados.Count; i++)
+            {
+                Console.WriteLine($"[{i + 1}] {empleados[i].Nombre} (ID: {empleados[i].Id})");
+            }
+
+            Console.Write("\nIngrese la opción del empleado: ");
+            if (!int.TryParse(Console.ReadLine(), out int opcionEmpleado) || opcionEmpleado < 1 || opcionEmpleado > empleados.Count)
+            {
+                Console.WriteLine(" Selección inválida.");
+                Console.ReadKey();
+                return;
+            }
+
+            var empleadoSeleccionado = empleados[opcionEmpleado - 1];
+
+            // Tipo de movimiento
+            Console.WriteLine("\nSeleccione el tipo de movimiento:\n  [1] ENTRADA\n  [2] SALIDA");
+            TipMovimiento tipoMovimiento;
+            string tipoEntrada = Console.ReadLine();
+
+            if (tipoEntrada == "1")
+            {
+                tipoMovimiento = TipMovimiento.ENTRADA;
+            }
+            else if (tipoEntrada == "2")
+            {
+                tipoMovimiento = TipMovimiento.SALIDA;
+            }
+            else
+            {
+                Console.WriteLine(" Opción inválida.");
+                Console.ReadKey();
+                return;
+            }
+
+            // Cantidad del movimiento
+            Console.Write("\nIngrese la cantidad del movimiento: ");
+            if (!int.TryParse(Console.ReadLine(), out int cantidad) || cantidad <= 0)
+            {
+                Console.WriteLine(" Cantidad inválida.");
+                Console.ReadKey();
+                return;
+            }
+
+            // Validar stock en caso de salida
+            if (tipoMovimiento == TipMovimiento.SALIDA && cantidad > productoSeleccionado.Stock)
+            {
+                Console.WriteLine($" No hay suficiente stock disponible. Stock actual: {productoSeleccionado.Stock}");
+                Console.ReadKey();
+                return;
+            }
+
+            // Actualizar stock
+            if (tipoMovimiento == TipMovimiento.ENTRADA)
+                productoSeleccionado.Stock += cantidad;
+            else
+                productoSeleccionado.Stock -= cantidad;
+
+            // Registrar movimiento
+            var movimiento = new MovimientoStock
+            {
+                Producto = productoSeleccionado,
+                Empleado = empleadoSeleccionado,
+                Cantidad = cantidad,
+                tipoMovimiento = tipoMovimiento,
+                FechaCreacion = DateTime.Now
+            };
+
+            sistema.AgregarMovimientoStock(movimiento); // Método que debes implementar en SistemaInventario
+
+            Console.WriteLine($"\n Movimiento registrado con éxito. Nombre Producto: {productoSeleccionado.Nombre} Nuevo stock: {productoSeleccionado.Stock}");
+            Console.ReadKey();
+        }
+
+      
+
+        #endregion
 
         #region Empleados
         private static void GestionEmpleados(SistemaInventario sistema)
@@ -588,7 +789,7 @@
                             break;
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
 
                     throw;
