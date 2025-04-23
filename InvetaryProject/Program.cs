@@ -579,9 +579,6 @@
                         case 4:
                             ModificarProducto(sistema);
                             break;
-                        case 5:
-                            CambiarEstadoProducto(sistema);
-                            break;
                         case 0:
                             regresar = true;
                             break;
