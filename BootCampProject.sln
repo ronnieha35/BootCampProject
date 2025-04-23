@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repaso", "Repaso\Repaso.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicPlayerApp_OOP", "MusicPlayerApp_OOP\MusicPlayerApp_OOP.csproj", "{7CDFC144-922C-4F55-845C-AB67015E3397}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvetaryProject", "InvetaryProject\InvetaryProject.csproj", "{4A88A2D6-2997-42C4-9E7C-20C30A4662CD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{7CDFC144-922C-4F55-845C-AB67015E3397}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7CDFC144-922C-4F55-845C-AB67015E3397}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7CDFC144-922C-4F55-845C-AB67015E3397}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A88A2D6-2997-42C4-9E7C-20C30A4662CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A88A2D6-2997-42C4-9E7C-20C30A4662CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A88A2D6-2997-42C4-9E7C-20C30A4662CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A88A2D6-2997-42C4-9E7C-20C30A4662CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
