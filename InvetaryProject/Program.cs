@@ -114,6 +114,7 @@
             }
         }
 
+
         private static void ListarMovimientos(SistemaInventario sistema)
         {
             Console.Clear();
@@ -263,9 +264,7 @@
             Console.WriteLine($"\n Movimiento registrado con éxito. Nombre Producto: {productoSeleccionado.Nombre} Nuevo stock: {productoSeleccionado.Stock}");
             Console.ReadKey();
         }
-
-      
-
+     
         #endregion
 
         #region Empleados
@@ -1013,7 +1012,7 @@
                 if (int.TryParse(entrada, out int opcion) &&
                     opcion > 0 && opcion <= Enum.GetValues(typeof(CategoriaProducto)).Length)
                 {
-                    return (CategoriaProducto)(opcion - 1); // Restamos 1 porque enum empieza en 0
+                    return (CategoriaProducto)(opcion - 1);
                 }
 
                 Console.WriteLine(" Opción inválida.");
