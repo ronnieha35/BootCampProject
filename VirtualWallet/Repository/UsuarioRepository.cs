@@ -11,8 +11,8 @@ namespace VirtualWallet.Repository
     public class UsuarioRepository : IUsuario
     {
         private readonly List<Usuario> _usuarios = new List<Usuario>();
-
-        public void CrearUsuario(Usuario usuario)
+      
+        public void SaveUser(Usuario usuario)
         {
             // Verifica si ya existe un usuario con el mismo username
             if (_usuarios.Any(u => u.User == usuario.User))
@@ -36,6 +36,16 @@ namespace VirtualWallet.Repository
         public Usuario? GetbyUser(string user)
         {
             return _usuarios.FirstOrDefault(u => u.User == user);
+        }
+
+        public void UpdateUser(Usuario usuario)
+        {
+            UpdateUser(usuario);
+        }
+
+        public Usuario? GetbyIdUsuario(int id)
+        {
+            return _usuarios.FirstOrDefault(u => u.IdUsuario == id);
         }
     }
 }

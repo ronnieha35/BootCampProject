@@ -9,8 +9,10 @@ namespace VirtualWallet.Interfaces
 {
     public interface IUsuario
     {
-        void CrearUsuario(Usuario usuario);
-        Usuario GetbyUser(string user);
+        void SaveUser(Usuario usuario);
+        void UpdateUser(Usuario usuario);
+        Usuario? GetbyUser(string user);
         List<Usuario> GetAllUsers();
+        Usuario? GetbyIdUsuario(int id);
     }
 }

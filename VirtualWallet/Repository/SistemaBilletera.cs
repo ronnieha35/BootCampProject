@@ -33,10 +33,10 @@ namespace VirtualWallet.Repository
                 Nombre = nombre,
                 Correo = correo,
                 User = user,
-                Clave = clave
+                Password = clave
             };
 
-            _usuarioRepository.CrearUsuario(nuevoUsuario);
+            _usuarioRepository.SaveUser(nuevoUsuario);
         }
     }
 }

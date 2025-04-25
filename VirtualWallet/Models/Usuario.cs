@@ -14,7 +14,7 @@ namespace VirtualWallet.Models
         public string Nombre { get; set; }
         public string Correo { get; set; }
         public string User { get; set; }
-        public string Clave { get; set; }
+        public string Password { get; set; }
         public Billtera billetera { get; set; }
         public DateTime FechaCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
