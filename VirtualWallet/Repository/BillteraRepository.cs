@@ -12,9 +12,9 @@ namespace VirtualWallet.Repository
     {
         public void Depositar(Usuario usuario, decimal monto)
         {
-            var transaccion = new Transaccion(monto, "Depósito", "Depósito de efectivo");
+            var transaccion = new Transaccion(monto, "Deposito", "Deposito Virtual");
             usuario.billetera.AgregarTransaccion(transaccion);
-            Console.WriteLine($"Depósito realizado. Nuevo saldo: S/ {usuario.billetera.Saldo:N2}");
+            Console.WriteLine($"Deposito realizado. Nuevo saldo: S/ {usuario.billetera.Saldo:N2}");
         }
 
         public decimal ObtenerSaldo(Usuario usuario)
@@ -35,7 +35,7 @@ namespace VirtualWallet.Repository
                 return;
             }
 
-            var transaccion = new Transaccion(monto, "Retiro", "Retiro de efectivo");
+            var transaccion = new Transaccion(monto, "Retiro", "Retiro Virtual");
             usuario.billetera.AgregarTransaccion(transaccion);
             Console.WriteLine($"Retiro realizado. Nuevo saldo: S/ {usuario.billetera.Saldo:N2}");
         }

@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvetaryProject", "Invetary
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualWallet", "VirtualWallet\VirtualWallet.csproj", "{60B048E1-D619-49B7-B51E-21D857081FB6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketService", "TicketService\TicketService.csproj", "{A54513E6-AF90-41FC-950D-C67D4769C39F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{60B048E1-D619-49B7-B51E-21D857081FB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60B048E1-D619-49B7-B51E-21D857081FB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{60B048E1-D619-49B7-B51E-21D857081FB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A54513E6-AF90-41FC-950D-C67D4769C39F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A54513E6-AF90-41FC-950D-C67D4769C39F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A54513E6-AF90-41FC-950D-C67D4769C39F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A54513E6-AF90-41FC-950D-C67D4769C39F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

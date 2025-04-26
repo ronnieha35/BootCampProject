@@ -187,56 +187,28 @@ namespace VirtualWallet
                 switch (opcion)
                 {
                     case "1":
-                        decimal saldo = billeterarepository.ObtenerSaldo(usuario);
-                        Console.WriteLine($"Saldo actual: S/ {saldo:N2}");
+                        MostrarSaldo(usuario);
+                       
                         break;
 
                     case "2":
-                        Console.Write("Monto a depositar: S/ ");
-                        if (decimal.TryParse(Console.ReadLine(), out decimal deposito))
-                            billeterarepository.Depositar(usuario, deposito);
-                        else
-                            Console.WriteLine("Monto inválido.");
+                        DepositarEfectivo(usuario);
+                        
+                       
                         break;
 
                     case "3":
-                        Console.Write("Monto a retirar: S/ ");
-                        if (decimal.TryParse(Console.ReadLine(), out decimal retiro))
-                            billeterarepository.Retirar(usuario, retiro);
-                        else
-                            Console.WriteLine("Monto inválido.");
+                        RetirarEfectivo(usuario);
                         break;
 
                     case "4":
-                        Console.WriteLine("Usuarios disponibles para transferir:");
-                        foreach (var u in usuariorepository.GetAllUsers().Where(u => u.User != usuario.User))
-                        {
-                            Console.WriteLine($"- {u.Nombre} ({u.User})");
-                        }
-
-                        Console.Write("Usuario destino: ");
-                        string destinoUser = Console.ReadLine();
-                        Usuario destino = usuariorepository.GetbyUser(destinoUser);
-
-                        if (destino == null)
-                        {
-                            Console.WriteLine("Usuario no encontrado.");
-                            break;
-                        }
-
-                        Console.Write("Monto a transferir: S/ ");
-                        if (decimal.TryParse(Console.ReadLine(), out decimal montoTransferencia))
-                            billeterarepository.Transferir(usuario, destino, montoTransferencia);
-                        else
-                            Console.WriteLine("Monto inválido.");
+                        TransferirEfectivo(usuario);
+                       
                         break;
 
                     case "5":
-                        Console.WriteLine("=== Transacciones ===");
-                        foreach (var t in billeterarepository.ObtenerTransacciones(usuario))
-                        {
-                            Console.WriteLine($"{t.Fecha:dd/MM/yyyy HH:mm} | {t.Tipo} | S/ {t.Monto:N2} | {t.Detalle}");
-                        }
+                        ListarTransacciones(usuario);
+                       
                         break;
 
                     case "6":
@@ -264,6 +236,8 @@ namespace VirtualWallet
                 }
             }
         }
+
+      
 
         private static void MostrarDatosUsuario(Usuario usuario)
         {
@@ -454,6 +428,65 @@ namespace VirtualWallet
             }
 
           
+        }
+        #endregion
+        #region billetera
+        private static void ListarTransacciones(Usuario usuario)
+        {
+            Console.WriteLine("=== Transacciones ===");
+            foreach (var t in billeterarepository.ObtenerTransacciones(usuario))
+            {
+                Console.WriteLine($"{t.Fecha:dd/MM/yyyy HH:mm} | {t.Tipo} | S/ {t.Monto:N2} | {t.Detalle}");
+            }
+        }
+
+        private static void TransferirEfectivo(Usuario usuario)
+        {
+            Console.WriteLine("Usuarios disponibles para transferir:");
+            foreach (var u in usuariorepository.GetAllUsers().Where(u => u.User != usuario.User))
+            {
+                Console.WriteLine($"- {u.Nombre} ({u.User})");
+            }
+
+            Console.Write("Usuario destino: ");
+            string destinoUser = Console.ReadLine();
+            Usuario? destino = usuariorepository.GetbyUser(destinoUser);
+
+            if (destino == null)
+            {
+                Console.WriteLine("Usuario no encontrado.");
+                return;
+            }
+
+            Console.Write("Monto a transferir: S/ ");
+            if (decimal.TryParse(Console.ReadLine(), out decimal montoTransferencia))
+                billeterarepository.Transferir(usuario, destino, montoTransferencia);
+            else
+                Console.WriteLine("Monto inválido.");
+        }
+
+        private static void DepositarEfectivo(Usuario usuario)
+        {
+            Console.Write("Monto a depositar: S/ ");
+            if (decimal.TryParse(Console.ReadLine(), out decimal deposito))
+                billeterarepository.Depositar(usuario, deposito);
+            else
+                Console.WriteLine("Monto inválido.");
+        }
+
+        private static void MostrarSaldo(Usuario usuario)
+        {
+            decimal saldo = billeterarepository.ObtenerSaldo(usuario);
+            Console.WriteLine($"Saldo actual: S/ {saldo:N2}");
+        }
+
+        private static void RetirarEfectivo(Usuario usuario)
+        {
+            Console.Write("Monto a retirar: S/ ");
+            if (decimal.TryParse(Console.ReadLine(), out decimal retiro))
+                billeterarepository.Retirar(usuario, retiro);
+            else
+                Console.WriteLine("Monto inválido.");
         }
         #endregion
 

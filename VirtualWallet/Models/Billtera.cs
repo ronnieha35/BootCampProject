@@ -17,9 +17,10 @@ namespace VirtualWallet.Models
             movimientos = new List<Transaccion>();
         }
 
-        public void AgregarTransaccion(Transaccion transaccion)
+        public void 
+            AgregarTransaccion(Transaccion transaccion)
         {
-            if (transaccion.Tipo == "Depósito")
+            if (transaccion.Tipo == "Deposito")
                 Saldo += transaccion.Monto;
             else if (transaccion.Tipo == "Retiro" || transaccion.Tipo == "Transferencia")
                 Saldo -= transaccion.Monto;
