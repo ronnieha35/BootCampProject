@@ -7,7 +7,7 @@ using TicketService.Enumeradores;
 
 namespace TicketService.Models
 {
-    public class Persona
+    public abstract class Persona
     {
         private static int _nextId = 1;
         public int Id { get; private set; }

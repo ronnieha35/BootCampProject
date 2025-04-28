@@ -8,5 +8,12 @@ namespace TicketService.Enumeradores
 {
     public enum TicketCategory
     {
+        SolicituddeServicio,
+        Problema,
+        Desarrollo,
+        Validacion,
+        Incidencia,
+        Cambio
+
     }
 }

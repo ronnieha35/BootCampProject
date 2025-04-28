@@ -8,5 +8,8 @@ namespace TicketService.Enumeradores
 {
     public enum Priority
     {
+        Normal,
+        Alta,
+        Media
     }
 }

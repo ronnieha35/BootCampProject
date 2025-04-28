@@ -8,5 +8,9 @@ namespace TicketService.Enumeradores
 {
     public enum TicketStatus
     {
+        Cerrado,
+        EnProceso,
+        Abierto,
+        Pendiente
     }
 }

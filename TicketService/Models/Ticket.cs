@@ -16,6 +16,7 @@ namespace TicketService.Models
         public TicketStatus Status { get; set; }
         public Priority Priority { get; set; }
         public TicketCategory ticketCategory { get; set; }
+        public List<Comment> comments { get; set; }
         public string ReportedBy { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime LastUpdated { get; set; }

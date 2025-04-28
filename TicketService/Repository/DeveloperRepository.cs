@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using TicketService.Interface;
 using TicketService.Models;
 
-namespace TicketService.Clase
+namespace TicketService.Repository
 {
     public class DeveloperRepository : IDeveloperRepository
     {
@@ -21,12 +21,12 @@ namespace TicketService.Clase
             }
  
             _developers.Add(developer);
-            Console.WriteLine($"Developer '{developer.Role}' creado con éxito.");
+            
         }
 
         public List<Developer> GetAll()
         {
-            return _developers;
+            return _developers.ToList();
         }
 
         public Developer? GetById(int id)

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using TicketService.Interface;
 using TicketService.Models;
 
-namespace TicketService.Clase
+namespace TicketService.Repository
 {
     public class PersonaRepository : IPersonaRepository
     {

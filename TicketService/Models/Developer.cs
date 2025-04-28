@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TicketService.Models
 {
-    public class Developer
+    public class Developer : Persona
     {
         private static int _nextId = 1;
         public int Id { get; private set; }

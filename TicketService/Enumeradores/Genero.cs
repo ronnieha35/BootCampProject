@@ -8,7 +8,7 @@ namespace TicketService.Enumeradores
 {
     public enum Genero
     {
-        MASCULINO,
-        FEMENINO
+        Masculino,
+        Femenino
     }
 }
