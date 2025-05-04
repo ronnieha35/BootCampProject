@@ -25,14 +25,14 @@
 
 
         //Principio de Responsabilidad Simple (SRP) Solo Procesan Pagos
-        //Abierto Cerrado (OCP) es una clase abstracta que puede extener nuevos metodos TC y Paypal sin modificar codigo
+        //Abierto Cerrado (OCP) es una clase abstracta que puede extender nuevos metodos TC y Paypal sin modificar codigo
         public abstract class MetodoPago
         {
             public abstract bool Procesar(decimal monto, string referencia);
         }
 
         //Principio de Responsabilidad Simple (SRP) Solo Procesan Pagos
-        //Principio de Sustitucion Liskow (LSP) heran de metodoPago y se puede sustituir sin errores
+        //Principio de Sustitucion Liskow (LSP) heredan de metodoPago y se puede sustituir sin errores
         public class TarjetaCredito : MetodoPago
         {
             public override bool Procesar(decimal monto, string referencia)
@@ -43,7 +43,7 @@
         }
 
         //Principio de Responsabilidad Simple (SRP) Solo Procesan Pagos
-        //Principio de Sustitucion Liskow (LSP) heran de metodoPago y se puede sustituir sin errores
+        //Principio de Sustitucion Liskow (LSP) heredan de metodoPago y se puede sustituir sin errores
         public class Paypal : MetodoPago
         {
             public override bool Procesar(decimal monto, string referencia)
@@ -54,7 +54,7 @@
         }
 
         //Principio de Responsabilidad Simple (SRP) Solo Procesan Pagos
-        //Principio de Sustitucion Liskow (LSP) heran de metodoPago y se puede sustituir sin errores
+        //Principio de Sustitucion Liskow (LSP) heredan de metodoPago y se puede sustituir sin errores
         public class Transferencia : MetodoPago
         {
             public override bool Procesar(decimal monto, string referencia)

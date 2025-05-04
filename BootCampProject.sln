@@ -25,6 +25,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolidSamples", "SolidSample
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetoPrincipiosSolid", "RetoPrincipiosSolid\RetoPrincipiosSolid.csproj", "{41EFA493-2229-4C80-BBB4-6CD900285CBD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SistemaReservaRestaurant", "SistemaReservaRestaurant\SistemaReservaRestaurant.csproj", "{7F3F950D-77A3-4F94-B8FC-CAFA16664F7D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SistemaReservaAutos", "SistemaReservaAutos\SistemaReservaAutos.csproj", "{8543C997-1889-45DD-806A-026B92447C0E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +79,14 @@ Global
 		{41EFA493-2229-4C80-BBB4-6CD900285CBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{41EFA493-2229-4C80-BBB4-6CD900285CBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{41EFA493-2229-4C80-BBB4-6CD900285CBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F3F950D-77A3-4F94-B8FC-CAFA16664F7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F3F950D-77A3-4F94-B8FC-CAFA16664F7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F3F950D-77A3-4F94-B8FC-CAFA16664F7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F3F950D-77A3-4F94-B8FC-CAFA16664F7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8543C997-1889-45DD-806A-026B92447C0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8543C997-1889-45DD-806A-026B92447C0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8543C997-1889-45DD-806A-026B92447C0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8543C997-1889-45DD-806A-026B92447C0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
