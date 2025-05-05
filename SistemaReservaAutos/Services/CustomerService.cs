@@ -54,5 +54,20 @@ namespace SistemaReservaAutos.Services
         {
             throw new NotImplementedException();
         }
+
+        public bool UpdateCustomer(Customer customer)
+        {
+            try
+            {
+                _customerRepository.Update(customer);
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex);
+                return false;
+            }
+        }
     }
 }

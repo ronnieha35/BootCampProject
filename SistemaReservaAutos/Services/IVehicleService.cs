@@ -10,6 +10,8 @@ namespace SistemaReservaAutos.Services
 {
     public interface IVehicleService
     {
+        bool CreateVehicle(Vehicle vehicle);
+        bool UpdateStatusVehicle(Vehicle vehicle);
         List<Vehicle> GetAvailablesVehicles(StatusVehicle statusVehicle);
         Vehicle GetByVehicleId(int id);
         List<Vehicle> GetAllVehicles();

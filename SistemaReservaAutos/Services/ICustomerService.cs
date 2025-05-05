@@ -10,9 +10,11 @@ namespace SistemaReservaAutos.Services
     public interface ICustomerService
     {
         bool CreateCustomer(Customer customer);
+        bool UpdateCustomer(Customer customer); 
         Customer GetCustomerById(int id);
         List<Customer> GetCustomer();
         Customer GetCustomerByEmail(string email);
-        List<Reservation> GetCustomerReservations(int id);  
+        List<Reservation> GetCustomerReservations(int id); 
+        
     }
 }

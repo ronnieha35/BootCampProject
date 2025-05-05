@@ -12,8 +12,11 @@ namespace SistemaReservaAutos.Models
         public int Id { get; set; }
         public string? Brand { get; set; }
         public string? Model { get; set; }
+        public string? Year { get; set; }
+        public StatusSegment Segment {  get; set; }
+        public TypeCar Type { get; set; }
         public string? Plate { get; set; }
-        public string? Year {  get; set; }
+        public int QuantityPax {  get; set; }
         public StatusVehicle statusVehicle { get; set; }
 
         public override string ToString()

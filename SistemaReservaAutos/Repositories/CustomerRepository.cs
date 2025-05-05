@@ -1,4 +1,5 @@
 ﻿using SistemaReservaAutos.Models;
+using SistemaReservaAutos.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,14 @@ namespace SistemaReservaAutos.Repositories
     {
         private List<Customer> _customers = new List<Customer>();
         private int _nextId = 1;
+
+        public CustomerRepository()
+        {
+            _customers.Add(new Customer { Id = _nextId++, FullName = "Ronnie Alarcon", genero = Genero.Masculino, IdentityDocument = "40801577", PhoneNumber = "989-455-501", Email = "ronnieha@gmail.com", IsVip = true, IsHandicap = false });
+            _customers.Add(new Customer { Id = _nextId++, FullName = "Miguel Loza", genero = Genero.Masculino, IdentityDocument = "10458754", PhoneNumber = "978-475-999", Email = "miguelloza@gmail.com", IsVip = false, IsHandicap = false });
+            _customers.Add(new Customer { Id = _nextId++, FullName = "Andres Tapia", genero = Genero.Masculino, IdentityDocument = "45985465", PhoneNumber = "969-022-004", Email = "andrestapia@gmail.com", IsVip = false, IsHandicap = false });
+            _customers.Add(new Customer { Id = _nextId++, FullName = "Alexa Alarcon", genero = Genero.Femenino, IdentityDocument = "43578787", PhoneNumber = "999-154-874", Email = "alexaalarcon@gmail.com", IsVip = false, IsHandicap = false });
+        }
 
         public List<Customer> Add(Customer entity)
         {

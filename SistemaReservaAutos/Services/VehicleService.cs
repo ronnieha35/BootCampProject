@@ -17,6 +17,22 @@ namespace SistemaReservaAutos.Services
         {
             _vehicleRepository = vehicleRepository;
         }
+
+        public bool CreateVehicle(Vehicle vehicle)
+        {
+            try
+            {
+                _vehicleRepository.Add(vehicle);
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex);
+                return false;
+            }
+        }
+
         public List<Vehicle> GetAllVehicles()
         {
             return _vehicleRepository.GetAll();
@@ -30,6 +46,21 @@ namespace SistemaReservaAutos.Services
         public Vehicle GetByVehicleId(int id)
         {
             return _vehicleRepository.GetById(id);
+        }
+
+        public bool UpdateStatusVehicle(Vehicle vehicle)
+        {
+            try
+            {
+                _vehicleRepository.Update(vehicle);
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex);
+                return false;
+            }
         }
     }
 }
