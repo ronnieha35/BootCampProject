@@ -17,6 +17,7 @@ namespace SistemaReservaAutos.Models
         public TypeCar Type { get; set; }
         public string? Plate { get; set; }
         public int QuantityPax {  get; set; }
+        public decimal Tax {  get; set; }   
         public StatusVehicle statusVehicle { get; set; }
 
         public override string ToString()

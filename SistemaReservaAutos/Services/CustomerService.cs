@@ -52,7 +52,17 @@ namespace SistemaReservaAutos.Services
 
         public List<Reservation> GetCustomerReservations(int id)
         {
-            throw new NotImplementedException();
+            var customer = _customerRepository.GetById(id);
+
+            if (customer == null)
+            {
+                Console.WriteLine($"Id {id} Invalid");
+            }
+
+            var reservation = customer?.reservationsHistory;
+
+            return reservation.ToList();
+
         }
 
         public bool UpdateCustomer(Customer customer)

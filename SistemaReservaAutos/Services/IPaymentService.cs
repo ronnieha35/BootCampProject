@@ -9,8 +9,9 @@ namespace SistemaReservaAutos.Services
 {
     public interface IPaymentService
     {
-        List<Payment> GetPaymentsByReservation(int reservationId);
-        List<Payment> GetPaymentsByDate(DateTime paymentDate);
+        bool CreatePayment(Payment payment);
         List<Payment> GetAllPayment();
+        List<Payment> GetPaymentByUser(int id);
+        
     }
 }

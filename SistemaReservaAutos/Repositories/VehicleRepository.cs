@@ -16,16 +16,16 @@ namespace SistemaReservaAutos.Repositories
         public VehicleRepository()
         {
             //Init list vehicles
-            _vehicles.Add(new Vehicle { Id = _nextId++, Brand = "Toyota", Model = "Corolla", Year = "2025", Segment = StatusSegment.Medium, Type = TypeCar.Sedan,  Plate = "A8D-548", QuantityPax = 5, statusVehicle = StatusVehicle.Available  });
-            _vehicles.Add(new Vehicle { Id = _nextId++, Brand = "Toyoya", Model = "Yaris", Year = "2025", Segment = StatusSegment.Medium, Type = TypeCar.Sedan, Plate = "C7D-345", QuantityPax = 5, statusVehicle = StatusVehicle.Available });
-            _vehicles.Add(new Vehicle { Id = _nextId++, Brand = "Hyundai", Model = "Santa Fe", Year = "2025", Segment = StatusSegment.High, Type = TypeCar.Suv, Plate = "B8P-878", QuantityPax = 7, statusVehicle = StatusVehicle.Available });
-            _vehicles.Add(new Vehicle { Id = _nextId++, Brand = "Hyundai", Model = "New Elantra", Year = "2025", Segment = StatusSegment.Medium, Type = TypeCar.Sedan, Plate = "A1R-159", QuantityPax = 5, statusVehicle = StatusVehicle.Available });
-            _vehicles.Add(new Vehicle { Id = _nextId++, Brand = "Geely", Model = "Starray", Year = "2025", Segment = StatusSegment.Medium, Type = TypeCar.Suv, Plate = "D5V-471", QuantityPax = 5, statusVehicle = StatusVehicle.Available });
-            _vehicles.Add(new Vehicle { Id = _nextId++, Brand = "Audi", Model = "Q5", Year = "2025", Segment = StatusSegment.High, Type = TypeCar.Sedan, Plate = "A9C-764", QuantityPax = 7, statusVehicle = StatusVehicle.Available });
-            _vehicles.Add(new Vehicle { Id = _nextId++, Brand = "Nissan", Model = "Qasqai", Year = "2025", Segment = StatusSegment.Medium, Type = TypeCar.Suv, Plate = "A2C-199", QuantityPax = 5, statusVehicle = StatusVehicle.Available });
-            _vehicles.Add(new Vehicle { Id = _nextId++, Brand = "Nissan", Model = "Sentra", Year = "2025", Segment = StatusSegment.Medium, Type = TypeCar.Sedan, Plate = "B1A-795", QuantityPax = 5, statusVehicle = StatusVehicle.Available });
-            _vehicles.Add(new Vehicle { Id = _nextId++, Brand = "BMW", Model = "Serie 3", Year = "2025", Segment = StatusSegment.High, Type = TypeCar.Sedan, Plate = "A2B-478", QuantityPax = 5, statusVehicle = StatusVehicle.Available });
-            _vehicles.Add(new Vehicle { Id = _nextId++, Brand = "Toyota", Model = "Avanza", Year = "2025", Segment = StatusSegment.Medium, Type = TypeCar.Van, Plate = "B8G-881", QuantityPax = 9, statusVehicle = StatusVehicle.Available });
+            _vehicles.Add(new Vehicle { Id = _nextId++, Brand = "Toyota", Model = "Corolla", Year = "2025", Segment = StatusSegment.Medium, Type = TypeCar.Sedan,  Plate = "A8D-548", QuantityPax = 5, Tax = 25m, statusVehicle = StatusVehicle.Available  });
+            _vehicles.Add(new Vehicle { Id = _nextId++, Brand = "Toyoya", Model = "Yaris", Year = "2025", Segment = StatusSegment.Medium, Type = TypeCar.Sedan, Plate = "C7D-345", QuantityPax = 5, Tax = 25m, statusVehicle = StatusVehicle.Available });
+            _vehicles.Add(new Vehicle { Id = _nextId++, Brand = "Hyundai", Model = "Santa Fe", Year = "2025", Segment = StatusSegment.High, Type = TypeCar.Suv, Plate = "B8P-878", QuantityPax = 7, Tax = 80m, statusVehicle = StatusVehicle.Available });
+            _vehicles.Add(new Vehicle { Id = _nextId++, Brand = "Hyundai", Model = "New Elantra", Year = "2025", Segment = StatusSegment.Medium, Type = TypeCar.Sedan, Plate = "A1R-159", QuantityPax = 5, Tax = 25m, statusVehicle = StatusVehicle.Available });
+            _vehicles.Add(new Vehicle { Id = _nextId++, Brand = "Geely", Model = "Starray", Year = "2025", Segment = StatusSegment.Medium, Type = TypeCar.Suv, Plate = "D5V-471", QuantityPax = 5, Tax = 30m, statusVehicle = StatusVehicle.Available });
+            _vehicles.Add(new Vehicle { Id = _nextId++, Brand = "Audi", Model = "Q5", Year = "2025", Segment = StatusSegment.High, Type = TypeCar.Sedan, Plate = "A9C-764", QuantityPax = 7, Tax = 140m, statusVehicle = StatusVehicle.Available });
+            _vehicles.Add(new Vehicle { Id = _nextId++, Brand = "Nissan", Model = "Qasqai", Year = "2025", Segment = StatusSegment.Medium, Type = TypeCar.Suv, Plate = "A2C-199", QuantityPax = 5, Tax = 45m, statusVehicle = StatusVehicle.Available });
+            _vehicles.Add(new Vehicle { Id = _nextId++, Brand = "Nissan", Model = "Sentra", Year = "2025", Segment = StatusSegment.Medium, Type = TypeCar.Sedan, Plate = "B1A-795", QuantityPax = 5, Tax = 35m, statusVehicle = StatusVehicle.Available });
+            _vehicles.Add(new Vehicle { Id = _nextId++, Brand = "BMW", Model = "Serie 3", Year = "2025", Segment = StatusSegment.High, Type = TypeCar.Sedan, Plate = "A2B-478", QuantityPax = 5, Tax = 85m, statusVehicle = StatusVehicle.Available });
+            _vehicles.Add(new Vehicle { Id = _nextId++, Brand = "Toyota", Model = "Avanza", Year = "2025", Segment = StatusSegment.Medium, Type = TypeCar.Van, Plate = "B8G-881", QuantityPax = 9, Tax = 50m, statusVehicle = StatusVehicle.Available });
 
         }
 

@@ -5,6 +5,7 @@ using SistemaReservaAutos.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -32,7 +33,9 @@ namespace SistemaReservaAutos.UI
 
         public void Run()
         {
+            
             Console.WriteLine("=== Welcome RentCar Reservation ===");
+          
 
             while (_isRunning)
             {
@@ -57,6 +60,9 @@ namespace SistemaReservaAutos.UI
                     case "5":
                         ManageVehicles();
                         break;
+                    case "6":
+                        ManagePayments();
+                        break;
                     case "0":
                         _isRunning = false;
                         Console.WriteLine("Thank you for using the Car Reservation System!");
@@ -72,36 +78,210 @@ namespace SistemaReservaAutos.UI
             }
         }
 
-        
+        #region Payments
+        private void ManagePayments()
+        {
+            bool exit = false;
 
+            while (!exit)
+            {
+                Console.Clear();
+                Console.WriteLine("=== Manage Payments ===");
+                Console.WriteLine("1. ViewPayments");
+                Console.WriteLine("2. List Payments By User");
+                Console.WriteLine("3. Exit");
+                Console.Write("Enter option: ");
+
+                var option = Console.ReadLine();
+
+                switch (option)
+                {
+                    case "1":
+                        ViewPayments();
+                        break;
+                    case "2":
+                        ListPaymentsByUser();
+                        break;
+                    case "3":
+                        exit = true;
+                        break;
+                    default:
+                        Console.WriteLine("Invalid option.");
+                        break;
+                }
+            }
+        }
+        private void ListPaymentsByUser()
+        {
+            //Seleccionar Customer
+            var customers = _customerService.GetCustomer();
+
+            if (customers == null)
+            {
+                Console.WriteLine("No Customers found. ");
+                return;
+            }
+
+            Console.Write("\n=== Select Customer  ===\n");
+            for (int i = 0; i < customers.Count; i++)
+            {
+                var c = customers[i];
+                Console.WriteLine($"[{i + 1}] {c.Id} | {c.FullName} | {c.IdentityDocument}");
+            }
+
+            // Select Customer
+            Console.Write("\nSelect Customer (number): ");
+            if (!int.TryParse(Console.ReadLine(), out int tableIndexCustomer) ||
+                tableIndexCustomer < 1 || tableIndexCustomer > customers.Count)
+            {
+                Console.WriteLine("Invalid Customer selection.");
+                return;
+            }
+
+            
+            var selectedCustomer = customers[tableIndexCustomer - 1];
+
+            var payments = _paymentService.GetPaymentByUser(selectedCustomer.Id);
+
+
+            Console.WriteLine("\n ID | FullName | Model | Year | Segment | Type | Plate | Amount | PayDate | status");
+            Console.WriteLine(" " + new string('-', 80));
+
+            foreach (var item in payments)
+            {
+                var reservation = _reservationService.GetReservationById(item.Id);
+                var vehicle = _vehicleService.GetByVehicleId(reservation.VehicleId);
+
+                Console.WriteLine($" {item.Id} | {selectedCustomer.FullName} | {vehicle.Model} | {vehicle.Segment} | {vehicle.Plate} | S/ {item.Amount.ToString("N2")} |{item.paymentDate.ToShortDateString()} | {reservation.statusReservation}");
+            }
+
+            Console.ReadKey();
+
+
+        }
+        private void ViewPayments()
+        {
+            Console.WriteLine("\n=== List of Payments ===");
+
+            var payments = _paymentService.GetAllPayment();
+
+            if (payments.Count == 0)
+            {
+                Console.WriteLine("No payments registed");
+                Console.ReadKey();
+                return;
+            }
+
+            Console.WriteLine("\n ID | IdReservation | FullName | PayDay | Amount | Vehicle | Model | status");
+            Console.WriteLine(" " + new string('-', 80));
+
+            foreach (var payment in payments)
+            {
+                var reservation = _reservationService.GetReservationById(payment.IdReservation);
+                var customer = _customerService.GetCustomerById(reservation.CustomerId);
+                var vehicle = _vehicleService.GetByVehicleId(reservation.VehicleId);
+
+                Console.WriteLine($" {payment.Id} | {reservation.Id} | {customer.FullName} | {payment.paymentDate.ToShortDateString()} | S/. {payment.Amount.ToString("N2")} | {vehicle.Brand} | {vehicle.Model} | {reservation.statusReservation}");
+
+            }
+
+            Console.ReadKey();
+
+        }
+        #endregion
 
         #region Customer
         private void ManageCustomers()
         {
-            Console.Clear();
-            Console.WriteLine("=== Manage Customers ===");
-            Console.WriteLine("1. Create Customer");
-            Console.WriteLine("2. Update Customer");
-            Console.WriteLine("3. List Customer");
-            Console.Write("Enter option: ");
+            bool exit = false;
 
-            var option = Console.ReadLine();
-
-            switch (option)
+            while (!exit)
             {
-                case "1":
-                    AddNewCustomer();
-                    break;
-                case "2":
-                    UpdateCustomer();
-                    break;
-                case "3":
-                    ListCustomer();
-                    break;
-                default:
-                    Console.WriteLine("Invalid option.");
-                    break;
+                Console.Clear();
+                Console.WriteLine("=== Manage Customers ===");
+                Console.WriteLine("1. Create Customer");
+                Console.WriteLine("2. Update Customer");
+                Console.WriteLine("3. List Customer");
+                Console.WriteLine("4. List Reservation History");
+                Console.WriteLine("5. Exit");
+                Console.Write("Enter option: ");
+
+                var option = Console.ReadLine();
+
+                switch (option)
+                {
+                    case "1":
+                        AddNewCustomer();
+                        break;
+                    case "2":
+                        UpdateCustomer();
+                        break;
+                    case "3":
+                        ListCustomer();
+                        break;
+                    case "4":
+                        ListReservationHistory();
+                        break;
+                    case "5":
+                        exit = true;
+                        break;
+                    default:
+                        Console.WriteLine("Invalid option.");
+                        break;
+                }
+            } 
+        }
+        private void ListReservationHistory()
+        {
+            var customers = _customerService.GetCustomer();
+
+            if (customers.Count == 0)
+            {
+                Console.WriteLine("No customers found");
+                Console.ReadKey();
+                return;
             }
+
+            Console.Write("\n=== Select Customer  ===\n");
+            for (int i = 0; i < customers.Count; i++)
+            {
+                var c = customers[i];
+                Console.WriteLine($"[{i + 1}] {c.Id} | {c.FullName} | {c.IdentityDocument}");
+            }
+
+            // Select Customer
+            Console.Write("\nSelect Customer (number): ");
+            if (!int.TryParse(Console.ReadLine(), out int tableIndexCustomer) ||
+                tableIndexCustomer < 1 || tableIndexCustomer > customers.Count)
+            {
+                Console.WriteLine("Invalid Customer selection.");
+                return;
+            }
+
+            var selectedCustomer = customers[tableIndexCustomer - 1];
+
+            if (selectedCustomer.reservationsHistory.Count == 0)
+            {
+                Console.WriteLine("No customers found");
+                Console.ReadKey();
+                return;
+            }
+
+
+            Console.WriteLine("\n ID | FullName | Model | Year | Segment | Type | Plate | DateReserved | DateReturn | status");
+            Console.WriteLine(" " + new string('-', 80));
+            foreach (var reservation in selectedCustomer.reservationsHistory)
+            { 
+                
+                var vehicle = _vehicleService.GetByVehicleId(reservation.VehicleId);
+
+                Console.WriteLine($" {reservation.Id} | {selectedCustomer.FullName} | {vehicle.Model} | {vehicle.Year} | {vehicle.Segment} | {vehicle.Type} | {vehicle.Plate} | {(reservation.ReturnDate.ToShortDateString())} | {reservation.ReturnDate.ToShortDateString()} | {reservation.statusReservation}");
+               
+
+                
+            }
+
+            Console.ReadKey();
         }
         private void AddNewCustomer()
         {
@@ -147,18 +327,18 @@ namespace SistemaReservaAutos.UI
             Console.WriteLine("Email: ");
             var email = Console.ReadLine();
 
-            Console.WriteLine("EsVip : (Yes/No)");
+            Console.WriteLine("EsVip : (yes/no)");
             bool esVip = false;
             var valvip = Console.ReadLine();
 
-            if (valvip == "Yes")
+            if (valvip == "yes")
                 esVip = true;
 
-            Console.WriteLine("EsHandicap : (Yes/No)");
+            Console.WriteLine("EsHandicap : (yes/no)");
             bool esHandicap = false;
             var valHandicap = Console.ReadLine();
 
-            if (valHandicap == "Yes")
+            if (valHandicap == "yes")
                 esHandicap = true;
 
             var customer = new Customer()
@@ -176,7 +356,6 @@ namespace SistemaReservaAutos.UI
             Console.WriteLine("Customer Created Succesfully....!");
             Console.ReadKey();
         }
-
         private void ListCustomer()
         {
             var customer = _customerService.GetCustomer();
@@ -196,8 +375,10 @@ namespace SistemaReservaAutos.UI
                     Console.WriteLine($" {item.Id} | {item.FullName} | {item.IdentityDocument} | {item.genero} | {item.Email} | {item.PhoneNumber} | {(item.IsVip ? "Yes" : "No")} | {(item.IsHandicap ? "Yes" : "No")}");
                 }
             }
-        }
 
+            Console.ReadKey();
+        
+        }
         private void UpdateCustomer()
         {
             var customers = _customerService.GetCustomer();
@@ -260,34 +441,45 @@ namespace SistemaReservaAutos.UI
         #region Vehicles
         private void ManageVehicles()
         {
-            Console.Clear();
-            Console.WriteLine("=== Manage Vehicles ===");
-            Console.WriteLine("1. Create Vehicle");
-            Console.WriteLine("2. Update Status Vehicle");
-            Console.WriteLine("3. List Vehicle");
-            Console.WriteLine("4. List Vehicle by Status");
-            Console.Write("Enter option: ");
+            bool exit = false;
 
-            var option = Console.ReadLine();
-
-            switch (option)
+            while (!exit)
             {
-                case "1":
-                    AddNewVehicle();
-                    break;
-                case "2":
-                    UpdateStatusVehicle();
-                    break;
-                case "3":
-                    ListVehicle();
-                    break;
-                case "4":
-                    ListVehicleByStatus();
-                    break;
-                default:
-                    Console.WriteLine("Invalid option.");
-                    break;
+                Console.Clear();
+                Console.WriteLine("=== Manage Vehicles ===");
+                Console.WriteLine("1. Create Vehicle");
+                Console.WriteLine("2. Update Status Vehicle");
+                Console.WriteLine("3. List Vehicle");
+                Console.WriteLine("4. List Vehicle by Status");
+                Console.WriteLine("5. Exit");
+                Console.Write("Enter option: ");
+
+                var option = Console.ReadLine();
+
+                switch (option)
+                {
+                    case "1":
+                        AddNewVehicle();
+                        break;
+                    case "2":
+                        UpdateStatusVehicle();
+                        break;
+                    case "3":
+                        ListVehicle();
+                        break;
+                    case "4":
+                        ListVehicleByStatus();
+                        break;
+                    case "5":
+                        exit = true;
+                        break;
+                    default:
+                        Console.WriteLine("Invalid option.");
+                        break;
+                }
             }
+
+          
         }
         private void ListVehicleByStatus()
         {
@@ -328,9 +520,10 @@ namespace SistemaReservaAutos.UI
 
             var vehicle = _vehicleService.GetAvailablesVehicles(selectedStatus);
 
-            if (vehicle == null)
+            if (vehicle.Count() == 0)
             {
                 Console.WriteLine("No available vehicles. ");
+                Console.ReadKey();
                 return;
             }
             else
@@ -343,29 +536,32 @@ namespace SistemaReservaAutos.UI
                     Console.WriteLine($" {item.Id} | {item.Brand} | {item.Model} | {item.Year} | {item.Segment} | {item.Type} | {item.Plate} | {(item.QuantityPax)} | {item.statusVehicle}");
                 }
             }
-        }
 
+            Console.ReadKey();
+        }
         private void ListVehicle()
         {
             var vehicle = _vehicleService.GetAllVehicles();
 
-            if (vehicle == null)
+            if (vehicle.Count == 0)
             {
                 Console.WriteLine("No vehicles found. ");
+                Console.ReadKey();
                 return;
             }
             else
             {
-                Console.WriteLine("\n ID | Brand | Model | Year | Segment | Type | Plate | QuantityPax | statusVehicle");
+                Console.WriteLine("\n ID | Brand | Model | Year | Segment | Type | Plate | QuantityPax | statusVehicle | Tax");
                 Console.WriteLine(" " + new string('-', 80));
 
                 foreach (var item in vehicle)
                 {
-                    Console.WriteLine($" {item.Id} | {item.Brand} | {item.Model} | {item.Year} | {item.Segment} | {item.Type} | {item.Plate} | {(item.QuantityPax)} | {item.statusVehicle}");
+                    Console.WriteLine($" {item.Id} | {item.Brand} | {item.Model} | {item.Year} | {item.Segment} | {item.Type} | {item.Plate} | {(item.QuantityPax)} | {item.statusVehicle} | S/ {item.Tax.ToString("N2")}");
                 }
             }
-        }
 
+            Console.ReadKey();
+        }
         private void UpdateStatusVehicle()
         {
             var vehicle = _vehicleService.GetAllVehicles();
@@ -442,7 +638,6 @@ namespace SistemaReservaAutos.UI
                 Console.WriteLine("Invalid option.");
             }
         }
-
         private void AddNewVehicle()
         {
             Console.Clear();
@@ -549,7 +744,10 @@ namespace SistemaReservaAutos.UI
             Console.WriteLine("Quantity Pax: ");
             var quantity = Console.ReadLine();
 
-         
+            decimal price = ReadDecimal("Tax: ");
+
+
+
 
             var vehicle = new Vehicle()
             {
@@ -560,7 +758,8 @@ namespace SistemaReservaAutos.UI
                 Type = selectedCar,
                 statusVehicle = selectedStatus,
                 Plate = plate,
-                QuantityPax = int.Parse(quantity)
+                QuantityPax = int.Parse(quantity),
+                Tax = price
             };
 
             var confirmVehicle = _vehicleService.CreateVehicle(vehicle);
@@ -571,17 +770,209 @@ namespace SistemaReservaAutos.UI
         #region Reservation
         private void CancelReservation()
         {
+            var _reservations = _reservationService.GetReservationsByStatus();
+
+            if (_reservations.Count == 0)
+            {
+                Console.WriteLine("No reservations found. ");
+                Console.ReadKey();
+                return;
+            }
+
+            Console.Write("=== Select Reservation  === \n");
+            for (int i = 0; i < _reservations.Count; i++)
+            {
+                var r = _reservations[i];
+
+                var customer = _customerService.GetCustomerById(r.CustomerId);
+                var vehicle  = _vehicleService.GetByVehicleId(r.VehicleId);
+
+                Console.WriteLine($"[{i + 1}] {r.Id} | {customer.FullName} | {vehicle.Model} | {r.ReservationDate.Date} | {r.statusReservation}");
+            }
+
+            // Select Customer
+            Console.Write("\nSelect reservation (number): ");
+            if (!int.TryParse(Console.ReadLine(), out int tableIndexCustomer) ||
+                tableIndexCustomer < 1 || tableIndexCustomer > _reservations.Count)
+            {
+                Console.WriteLine("Invalid reservation selection.");
+                return;
+            }
+
+            var selectedReservation = _reservations[tableIndexCustomer - 1];
+
+            selectedReservation.statusReservation = StatusReservation.Canceled;
+
+            _reservationService.UpdateReservation(selectedReservation);
+            Console.WriteLine($"Reservation Id {selectedReservation.Id} Canceled");
+            Console.ReadKey();
 
         }
-
         private void ListReservations()
         {
+            var reservations = _reservationService.GetAllReservations();
 
+            if (reservations.Count == 0)
+            {
+                Console.WriteLine("No reservations found. ");
+                Console.ReadKey();
+                return;
+            }
+            else
+            {
+
+                Console.WriteLine("\n ID | FullName | Model | Year | Segment | Type | Plate | DateReserved | DateReturn | status");
+                Console.WriteLine(" " + new string('-', 80));
+
+                foreach (var item in reservations)
+                {
+                    var customer = _customerService.GetCustomerById(item.CustomerId);
+                    var vehicle = _vehicleService.GetByVehicleId(item.VehicleId);
+
+                    Console.WriteLine($" {item.Id} | {customer.FullName} | {vehicle.Model} | {vehicle.Year} | {vehicle.Segment} | {vehicle.Type} | {vehicle.Plate} | {(item.ReturnDate.ToShortDateString())} | {item.ReturnDate.ToShortDateString()} | {item.statusReservation}");
+                }
+
+                Console.ReadKey();
+            }
         }
-
         private void AddNewReservation()
         {
+            Console.Clear();
+            Console.WriteLine("=== Create Reservation ===");
 
+            //Seleccionar Customer
+            var customers = _customerService.GetCustomer();
+
+            if (customers == null)
+            {
+                Console.WriteLine("No Customers found. ");
+                return;
+            }
+
+            Console.Write("\n=== Select Customer  ===\n");
+            for (int i = 0; i < customers.Count; i++)
+            {
+                var c = customers[i];
+                Console.WriteLine($"[{i + 1}] {c.Id} | {c.FullName} | {c.IdentityDocument}");
+            }
+
+            // Select Customer
+            Console.Write("\nSelect Customer (number): ");
+            if (!int.TryParse(Console.ReadLine(), out int tableIndexCustomer) ||
+                tableIndexCustomer < 1 || tableIndexCustomer > customers.Count)
+            {
+                Console.WriteLine("Invalid Customer selection.");
+                return;
+            }
+
+            var selectedCustomer = customers[tableIndexCustomer - 1];
+
+            //Seleccionar Vehicle
+            var vehicle = _vehicleService.GetAvailablesVehicles(StatusVehicle.Available);
+
+            if (vehicle == null)
+            {
+                Console.WriteLine("No Vehicles found. ");
+                return;
+            }
+
+          
+            Console.WriteLine("=== Select Vehicle ===");
+            for (int i = 0; i < vehicle.Count; i++)
+            {
+                var v = vehicle[i];
+                Console.WriteLine($"[{i + 1}] {v.Id} | {v.Brand} | {v.Model} | {v.Year} | {v.Segment} | {v.statusVehicle}");
+            }
+
+            // Select Vehicle
+            Console.Write("\nSelect Vehicle (number): ");
+            if (!int.TryParse(Console.ReadLine(), out int tableIndexVehicle) ||
+                tableIndexVehicle < 1 || tableIndexVehicle > vehicle.Count)
+            {
+                Console.WriteLine("Invalid Vehicle selection.");
+                return;
+            }
+
+            var selectedVehicle = vehicle[tableIndexVehicle - 1];
+
+           
+
+            // Get Reservation Date
+            Console.Write("Reservation date (MM/DD/YYYY): ");
+            if (!DateTime.TryParse(Console.ReadLine(), out DateTime dateReservation))
+            {
+                Console.WriteLine("Invalid date format.");
+                return;
+            }
+
+            //Get Return Date
+            Console.Write("Return date (MM/DD/YYYY): ");
+            if (!DateTime.TryParse(Console.ReadLine(), out DateTime dateReturn))
+            {
+                Console.WriteLine("Invalid date format.");
+                return;
+            }
+
+            decimal taxVehicle;
+
+            if (dateReturn < dateReservation)
+            {
+                Console.WriteLine("Retur date must be higher from the Reservation Date");
+                return;
+            }
+            else
+            {
+                TimeSpan diffDay = dateReturn - dateReservation;
+                decimal numberday = diffDay.Days;
+                taxVehicle = selectedVehicle.Tax * numberday;
+            }
+
+                
+
+            var reservation = new Reservation()
+            {
+                CustomerId = selectedCustomer.Id,
+                VehicleId = selectedVehicle.Id,
+                ReservationDate = dateReservation,
+                ReturnDate = dateReturn,
+            };
+
+            _reservationService.CreateReservation(reservation);
+
+            //Update de Status of the Vehicle
+            selectedVehicle.statusVehicle = StatusVehicle.Rented;
+            _vehicleService.UpdateStatusVehicle(selectedVehicle);
+            
+            //Add History Reservation
+            selectedCustomer.reservationsHistory.Add(reservation);
+            _customerService.UpdateCustomer(selectedCustomer);
+
+            Console.WriteLine("Reservation was created successful");
+            Console.WriteLine($"Pax {selectedCustomer.FullName} has: {selectedCustomer.reservationsHistory.Count().ToString()} history reservations registed\n");
+
+            Console.WriteLine("=== Add Payment ===\n");
+            
+            var idreservation = reservation.Id;
+            Console.WriteLine($"Add IdReservation: {reservation.Id}");
+            Console.WriteLine($"Date Payment: {reservation.ReservationDate.Date}");
+            Console.WriteLine($"Add Amount: { taxVehicle.ToString("N2") }");
+            Console.WriteLine("Add Method Pay Cash/TC");
+            var methodPay = Console.ReadLine();
+
+            var payment = new Payment()
+            {
+                IdReservation = reservation.Id,
+                IdCustomer = selectedCustomer.Id,
+                paymentDate = reservation.ReservationDate,
+                Amount = taxVehicle,
+                paymentMethod = methodPay,
+
+            };
+
+            _paymentService.CreatePayment(payment);
+            Console.WriteLine($"Payment from the IdReservation {reservation.Id} was added");
+
+            Console.ReadKey();
         }
         #endregion
 
@@ -589,14 +980,28 @@ namespace SistemaReservaAutos.UI
 
         public void OptionsMenuPrincipal()
         {
+            
+
             Console.WriteLine("\n=== Main Menu ===");
             Console.WriteLine("1. Create Reservation");
             Console.WriteLine("2. View Reservations");
             Console.WriteLine("3. Cancel Reservation");
             Console.WriteLine("4. Manage Customers");
             Console.WriteLine("5. Manage Vehicles");
+            Console.WriteLine("6. View Payments");
             Console.WriteLine("0. Exit");
             Console.Write("Enter option: ");
+        }
+
+        private decimal ReadDecimal(string mensaje)
+        {
+            Console.Write(mensaje);
+            string input = Console.ReadLine();
+            if (decimal.TryParse(input, out decimal valor))
+            {
+                return (decimal)valor;
+            }
+            throw new FormatException("Must be enter a valid number.");
         }
     }
 }

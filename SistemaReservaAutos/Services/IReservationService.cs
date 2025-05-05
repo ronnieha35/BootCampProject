@@ -14,5 +14,7 @@ namespace SistemaReservaAutos.Services
         bool CancelReservation(Reservation reservation);
         List<Reservation> GetReservationsByDate(DateTime date);
         Reservation GetReservationById(int id);
+        List<Reservation> GetAllReservations();
+        List<Reservation> GetReservationsByStatus();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using SistemaReservaAutos.Repositories;
 using SistemaReservaAutos.Services;
 using SistemaReservaAutos.UI;
+using System;
 using System.Linq.Expressions;
 
 namespace SistemaReservaAutos
@@ -9,6 +10,9 @@ namespace SistemaReservaAutos
     {
         static void Main(string[] args)
         {
+
+
+          
             var customerService = new CustomerService(new CustomerRepository(),new ReservationRepository());
             var vehicleService = new VehicleService(new VehicleRepository());
             var reservationService = new ReservationService(new ReservationRepository());

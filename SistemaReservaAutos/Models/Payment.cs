@@ -11,6 +11,7 @@ namespace SistemaReservaAutos.Models
     {
         public int Id { get; set; }
         public int IdReservation { get; set; }
+        public int IdCustomer {  get; set; }
         public DateTime paymentDate { get; set; }
         public decimal Amount { get; set; }
         public string? paymentMethod { get; set; }

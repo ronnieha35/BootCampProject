@@ -44,6 +44,11 @@ namespace SistemaReservaAutos.Repositories
             return _payments.Where(x => x.IdReservation == reservationId).ToList();
         }
 
+        public List<Payment> GetPaymentsByUser(int id)
+        {
+            return _payments.Where(x => x.IdCustomer == id).ToList();
+        }
+
         public void Update(Payment entity)
         {
             var index = _payments.FindIndex(x => x.Id == entity.Id);

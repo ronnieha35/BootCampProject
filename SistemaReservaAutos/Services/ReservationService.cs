@@ -3,6 +3,7 @@ using SistemaReservaAutos.Repositories;
 using SistemaReservaAutos.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -67,6 +68,16 @@ namespace SistemaReservaAutos.Services
                 Console.WriteLine(e);
                 return false;
             }
+        }
+
+        public List<Reservation> GetAllReservations()
+        {
+            return  _reservationRepository.GetAll();
+        }
+
+        public List<Reservation> GetReservationsByStatus()
+        {
+            return _reservationRepository.GetActiveReservations();
         }
     }
 }

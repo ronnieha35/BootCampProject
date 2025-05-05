@@ -11,5 +11,6 @@ namespace SistemaReservaAutos.Repositories
     {
         Customer GetByEmail(string email);
         Customer GetByPhoneNumber(string phoneNumber);
+
     }
 }

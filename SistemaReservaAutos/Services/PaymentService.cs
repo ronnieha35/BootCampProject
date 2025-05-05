@@ -16,19 +16,30 @@ namespace SistemaReservaAutos.Services
         {
             _paymentRepository = paymentRepository;
         }
+
+        public bool CreatePayment(Payment payment)
+        {
+            try
+            {
+                _paymentRepository.Add(payment);
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex);
+                return false;
+            }
+        }
+
         public List<Payment> GetAllPayment()
         {
             return _paymentRepository.GetAll();
         }
 
-        public List<Payment> GetPaymentsByDate(DateTime paymentDate)
+        public List<Payment> GetPaymentByUser(int id)
         {
-            return _paymentRepository.GetPaymentsByDate(paymentDate);
-        }
-
-        public List<Payment> GetPaymentsByReservation(int reservationId)
-        {
-            return _paymentRepository.GetPaymentsByReservation(reservationId);
+            return _paymentRepository.GetPaymentsByUser(id);
         }
     }
 }
