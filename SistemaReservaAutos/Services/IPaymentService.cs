@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SistemaReservaAutos.Repositories
+namespace SistemaReservaAutos.Services
 {
-    public interface IPaymentRepository : IRepository<Payment>
+    public interface IPaymentService
     {
         List<Payment> GetPaymentsByReservation(int reservationId);
         List<Payment> GetPaymentsByDate(DateTime paymentDate);
-
+        List<Payment> GetAllPayment();
     }
 }
