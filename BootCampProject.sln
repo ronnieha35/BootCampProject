@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SistemaReservaRestaurant", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SistemaReservaAutos", "SistemaReservaAutos\SistemaReservaAutos.csproj", "{8543C997-1889-45DD-806A-026B92447C0E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestionPedidos", "GestionPedidos\GestionPedidos.csproj", "{11090D5E-67C8-3303-8EA2-C0D6EBFE388B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{8543C997-1889-45DD-806A-026B92447C0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8543C997-1889-45DD-806A-026B92447C0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8543C997-1889-45DD-806A-026B92447C0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11090D5E-67C8-3303-8EA2-C0D6EBFE388B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11090D5E-67C8-3303-8EA2-C0D6EBFE388B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11090D5E-67C8-3303-8EA2-C0D6EBFE388B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11090D5E-67C8-3303-8EA2-C0D6EBFE388B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

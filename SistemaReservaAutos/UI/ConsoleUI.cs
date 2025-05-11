@@ -63,6 +63,9 @@ namespace SistemaReservaAutos.UI
                     case "6":
                         ManagePayments();
                         break;
+                    case "7":
+                        ReturnVehicle();
+                        break;
                     case "0":
                         _isRunning = false;
                         Console.WriteLine("Thank you for using the Car Reservation System!");
@@ -76,6 +79,65 @@ namespace SistemaReservaAutos.UI
                 Console.ReadKey();
                 Console.Clear();
             }
+        }
+
+        private void ReturnVehicle()
+        {
+            var _reservations = _reservationService.GetReservationsByStatus();
+
+            if (_reservations.Count == 0)
+            {
+                Console.WriteLine("No reservations found. ");
+                Console.ReadKey();
+                return;
+            }
+
+            Console.Write("=== Select Reservation  === \n");
+            for (int i = 0; i < _reservations.Count; i++)
+            {
+                var r = _reservations[i];
+
+                var customer = _customerService.GetCustomerById(r.CustomerId);
+                var vehicle = _vehicleService.GetByVehicleId(r.VehicleId);
+
+                Console.WriteLine($"[{i + 1}] {r.Id} | {customer.FullName} | {vehicle.Model} | {r.ReservationDate.Date} | {r.statusReservation}");
+            }
+
+            // Select Customer
+            Console.Write("\nSelect reservation (number): ");
+            if (!int.TryParse(Console.ReadLine(), out int tableIndexCustomer) ||
+                tableIndexCustomer < 1 || tableIndexCustomer > _reservations.Count)
+            {
+                Console.WriteLine("Invalid reservation selection.");
+                return;
+            }
+
+            var selectedReservation = _reservations[tableIndexCustomer - 1];
+            var vehicles = _vehicleService.GetByVehicleId(selectedReservation.VehicleId);
+            var customers = _customerService.GetCustomerById(selectedReservation.CustomerId);
+
+            //actualizamos el status de la reserva
+            selectedReservation.statusReservation = StatusReservation.Finished;
+            _reservationService.UpdateReservation(selectedReservation);
+
+            //actualizamos el status del vehiculo
+            vehicles.statusVehicle = StatusVehicle.Available;
+            _vehicleService.UpdateStatusVehicle(vehicles);
+
+            //Actualizamos el historial de reservas del Cliente
+            foreach (var reservationHistory in customers.reservationsHistory)
+            {
+                if (reservationHistory.Id == selectedReservation.Id)
+                {
+                    reservationHistory.statusReservation = StatusReservation.Finished;
+                    _customerService.UpdateCustomer(customers);
+                }
+            }
+
+            Console.WriteLine($"Reservation N° {selectedReservation.Id} Finished");
+            Console.ReadKey();
+
+
         }
 
         #region Payments
@@ -144,15 +206,53 @@ namespace SistemaReservaAutos.UI
             var payments = _paymentService.GetPaymentByUser(selectedCustomer.Id);
 
 
-            Console.WriteLine("\n ID | FullName | Model | Year | Segment | Type | Plate | Amount | PayDate | status");
-            Console.WriteLine(" " + new string('-', 80));
+            int idWidth = 5;
+            int fullNameWidth = 25;
+            int modelWidth = 15;
+            int yearWidth = 6;
+            int segmentWidth = 10;
+            int typeWidth = 10;
+            int plateWidth = 10;
+            int amountWidth = 12;
+            int payDateWidth = 12;
+            int statusWidth = 15;
+
+            // Imprimir encabezado
+            Console.WriteLine(
+                "ID".PadRight(idWidth) +
+                "FullName".PadRight(fullNameWidth) +
+                "Model".PadRight(modelWidth) +
+                "Year".PadRight(yearWidth) +
+                "Segment".PadRight(segmentWidth) +
+                "Type".PadRight(typeWidth) +
+                "Plate".PadRight(plateWidth) +
+                "Amount".PadRight(amountWidth) +
+                "PayDate".PadRight(payDateWidth) +
+                "Status".PadRight(statusWidth)
+            );
+
+            // Línea separadora
+            Console.WriteLine(new string('-',
+                idWidth + fullNameWidth + modelWidth + yearWidth + segmentWidth +
+                typeWidth + plateWidth + amountWidth + payDateWidth + statusWidth));
 
             foreach (var item in payments)
             {
                 var reservation = _reservationService.GetReservationById(item.Id);
                 var vehicle = _vehicleService.GetByVehicleId(reservation.VehicleId);
 
-                Console.WriteLine($" {item.Id} | {selectedCustomer.FullName} | {vehicle.Model} | {vehicle.Segment} | {vehicle.Plate} | S/ {item.Amount.ToString("N2")} |{item.paymentDate.ToShortDateString()} | {reservation.statusReservation}");
+                Console.WriteLine(
+                    item.Id.ToString().PadRight(idWidth) +
+                    selectedCustomer.FullName.PadRight(fullNameWidth) +
+                    vehicle.Model.PadRight(modelWidth) +
+                    vehicle.Year.ToString().PadRight(yearWidth) +
+                    vehicle.Segment.ToString().PadRight(segmentWidth) +
+                    vehicle.Type.ToString().PadRight(typeWidth) +
+                    vehicle.Plate.PadRight(plateWidth) +
+                    ("S/ " + item.Amount.ToString("N2")).PadRight(amountWidth) +
+                    item.paymentDate.ToShortDateString().PadRight(payDateWidth) +
+                    item.statusPayment.ToString().PadRight(statusWidth)
+                );
             }
 
             Console.ReadKey();
@@ -172,8 +272,31 @@ namespace SistemaReservaAutos.UI
                 return;
             }
 
-            Console.WriteLine("\n ID | IdReservation | FullName | PayDay | Amount | Vehicle | Model | status");
-            Console.WriteLine(" " + new string('-', 80));
+            int idWidth = 5;
+            int reservationIdWidth = 15;
+            int fullNameWidth = 25;
+            int payDayWidth = 12;
+            int amountWidth = 12;
+            int brandWidth = 15;
+            int modelWidth = 15;
+            int statusWidth = 15;
+
+            // Imprimir encabezado
+            Console.WriteLine(
+                "ID".PadRight(idWidth) +
+                "IdReservation".PadRight(reservationIdWidth) +
+                "FullName".PadRight(fullNameWidth) +
+                "PayDay".PadRight(payDayWidth) +
+                "Amount".PadRight(amountWidth) +
+                "Vehicle".PadRight(brandWidth) +
+                "Model".PadRight(modelWidth) +
+                "Status".PadRight(statusWidth)
+            );
+
+            // Línea separadora
+            Console.WriteLine(new string('-',
+                idWidth + reservationIdWidth + fullNameWidth + payDayWidth +
+                amountWidth + brandWidth + modelWidth + statusWidth));
 
             foreach (var payment in payments)
             {
@@ -181,9 +304,18 @@ namespace SistemaReservaAutos.UI
                 var customer = _customerService.GetCustomerById(reservation.CustomerId);
                 var vehicle = _vehicleService.GetByVehicleId(reservation.VehicleId);
 
-                Console.WriteLine($" {payment.Id} | {reservation.Id} | {customer.FullName} | {payment.paymentDate.ToShortDateString()} | S/. {payment.Amount.ToString("N2")} | {vehicle.Brand} | {vehicle.Model} | {reservation.statusReservation}");
-
+                Console.WriteLine(
+                    payment.Id.ToString().PadRight(idWidth) +
+                    reservation.Id.ToString().PadRight(reservationIdWidth) +
+                    customer.FullName.PadRight(fullNameWidth) +
+                    payment.paymentDate.ToShortDateString().PadRight(payDayWidth) +
+                    ("S/. " + payment.Amount.ToString("N2")).PadRight(amountWidth) +
+                    vehicle.Brand.PadRight(brandWidth) +
+                    vehicle.Model.PadRight(modelWidth) +
+                    payment.statusPayment.ToString().PadRight(statusWidth)
+                );
             }
+
 
             Console.ReadKey();
 
@@ -268,17 +400,50 @@ namespace SistemaReservaAutos.UI
             }
 
 
-            Console.WriteLine("\n ID | FullName | Model | Year | Segment | Type | Plate | DateReserved | DateReturn | status");
-            Console.WriteLine(" " + new string('-', 80));
+            int idWidth = 5;
+            int fullNameWidth = 30;
+            int modelWidth = 15;
+            int yearWidth = 6;
+            int segmentWidth = 10;
+            int typeWidth = 10;
+            int plateWidth = 10;
+            int dateReservedWidth = 12;
+            int dateReturnWidth = 12;
+            int statusWidth = 12;
+
+            // Encabezado
+            Console.WriteLine(
+                "ID".PadRight(idWidth) +
+                "FullName".PadRight(fullNameWidth) +
+                "Model".PadRight(modelWidth) +
+                "Year".PadRight(yearWidth) +
+                "Segment".PadRight(segmentWidth) +
+                "Type".PadRight(typeWidth) +
+                "Plate".PadRight(plateWidth) +
+                "DateReserved".PadRight(dateReservedWidth) +
+                "DateReturn".PadRight(dateReturnWidth) +
+                "Status".PadRight(statusWidth)
+            );
+
+            // Línea separadora
+            Console.WriteLine(new string('-', idWidth + fullNameWidth + modelWidth + yearWidth + segmentWidth + typeWidth + plateWidth + dateReservedWidth + dateReturnWidth + statusWidth));
+
             foreach (var reservation in selectedCustomer.reservationsHistory)
-            { 
-                
+            {
                 var vehicle = _vehicleService.GetByVehicleId(reservation.VehicleId);
 
-                Console.WriteLine($" {reservation.Id} | {selectedCustomer.FullName} | {vehicle.Model} | {vehicle.Year} | {vehicle.Segment} | {vehicle.Type} | {vehicle.Plate} | {(reservation.ReturnDate.ToShortDateString())} | {reservation.ReturnDate.ToShortDateString()} | {reservation.statusReservation}");
-               
-
-                
+                Console.WriteLine(
+                    reservation.Id.ToString().PadRight(idWidth) +
+                    selectedCustomer.FullName.PadRight(fullNameWidth) +
+                    vehicle.Model.PadRight(modelWidth) +
+                    vehicle.Year.ToString().PadRight(yearWidth) +
+                    vehicle.Segment.ToString().PadRight(segmentWidth) +
+                    vehicle.Type.ToString().PadRight(typeWidth) +
+                    vehicle.Plate.PadRight(plateWidth) +
+                    reservation.ReservationDate.ToShortDateString().PadRight(dateReservedWidth) +
+                    reservation.ReturnDate.ToShortDateString().PadRight(dateReturnWidth) +
+                    reservation.statusReservation.ToString().PadRight(statusWidth)
+                );
             }
 
             Console.ReadKey();
@@ -367,12 +532,43 @@ namespace SistemaReservaAutos.UI
             }
             else
             {
-                Console.WriteLine("\n ID | Names | Identity | Genre | Email | Phone | esVip | esHandicap");
-                Console.WriteLine(" " + new string('-', 80));
+                // Definir el ancho de cada columna
+                int idWidth = 5;
+                int nameWidth = 20;
+                int identityWidth = 15;
+                int genreWidth = 10;
+                int emailWidth = 25;
+                int phoneWidth = 15;
+                int vipWidth = 10;
+                int handicapWidth = 12;
 
+                // Imprimir encabezado
+                Console.WriteLine(
+                    "ID".PadRight(idWidth) +
+                    "Name".PadRight(nameWidth) +
+                    "Identity".PadRight(identityWidth) +
+                    "Genre".PadRight(genreWidth) +
+                    "Email".PadRight(emailWidth) +
+                    "Phone".PadRight(phoneWidth) +
+                    "VIP".PadRight(vipWidth) +
+                    "Handicap".PadRight(handicapWidth)
+                );
+
+                Console.WriteLine(new string('-', idWidth + nameWidth + identityWidth + genreWidth + emailWidth + phoneWidth + vipWidth + handicapWidth));
+
+                // Imprimir datos de clientes
                 foreach (var item in customer)
                 {
-                    Console.WriteLine($" {item.Id} | {item.FullName} | {item.IdentityDocument} | {item.genero} | {item.Email} | {item.PhoneNumber} | {(item.IsVip ? "Yes" : "No")} | {(item.IsHandicap ? "Yes" : "No")}");
+                    Console.WriteLine(
+                        item.Id.ToString().PadRight(idWidth) +
+                        item.FullName.PadRight(nameWidth) +
+                        item.IdentityDocument.PadRight(identityWidth) +
+                        item.genero.ToString().PadRight(genreWidth) +
+                        item.Email.PadRight(emailWidth) +
+                        item.PhoneNumber.PadRight(phoneWidth) +
+                        (item.IsVip ? "Yes" : "No").PadRight(vipWidth) +
+                        (item.IsHandicap ? "Yes" : "No").PadRight(handicapWidth)
+                    );
                 }
             }
 
@@ -390,7 +586,7 @@ namespace SistemaReservaAutos.UI
             }
 
             
-            Console.Write("=== Select Customer to Update === ");
+            Console.Write("\n=== Select Customer to Update ===\n");
             for (int i = 0; i < customers.Count; i++)
             {
                 var c = customers[i];
@@ -528,12 +724,45 @@ namespace SistemaReservaAutos.UI
             }
             else
             {
-                Console.WriteLine("\n ID | Brand | Model | Year | Segment | Type | Plate | QuantityPax | statusVehicle");
-                Console.WriteLine(" " + new string('-', 90));
+                int idWidth = 5;
+                int brandWidth = 15;
+                int modelWidth = 15;
+                int yearWidth = 6;
+                int segmentWidth = 10;
+                int typeWidth = 10;
+                int plateWidth = 10;
+                int quantityPaxWidth = 12;
+                int statusWidth = 15;
+
+                // Imprimir encabezado
+                Console.WriteLine(
+                    "ID".PadRight(idWidth) +
+                    "Brand".PadRight(brandWidth) +
+                    "Model".PadRight(modelWidth) +
+                    "Year".PadRight(yearWidth) +
+                    "Segment".PadRight(segmentWidth) +
+                    "Type".PadRight(typeWidth) +
+                    "Plate".PadRight(plateWidth) +
+                    "QuantityPax".PadRight(quantityPaxWidth) +
+                    "Status".PadRight(statusWidth)
+                );
+
+                // Línea separadora
+                Console.WriteLine(new string('-', idWidth + brandWidth + modelWidth + yearWidth + segmentWidth + typeWidth + plateWidth + quantityPaxWidth + statusWidth));
 
                 foreach (var item in vehicle)
                 {
-                    Console.WriteLine($" {item.Id} | {item.Brand} | {item.Model} | {item.Year} | {item.Segment} | {item.Type} | {item.Plate} | {(item.QuantityPax)} | {item.statusVehicle}");
+                    Console.WriteLine(
+                        item.Id.ToString().PadRight(idWidth) +
+                        item.Brand.PadRight(brandWidth) +
+                        item.Model.PadRight(modelWidth) +
+                        item.Year.ToString().PadRight(yearWidth) +
+                        item.Segment.ToString().PadRight(segmentWidth) +
+                        item.Type.ToString().PadRight(typeWidth) +
+                        item.Plate.PadRight(plateWidth) +
+                        item.QuantityPax.ToString().PadRight(quantityPaxWidth) +
+                        item.statusVehicle.ToString().PadRight(statusWidth)
+                    );
                 }
             }
 
@@ -551,12 +780,50 @@ namespace SistemaReservaAutos.UI
             }
             else
             {
-                Console.WriteLine("\n ID | Brand | Model | Year | Segment | Type | Plate | QuantityPax | statusVehicle | Tax");
-                Console.WriteLine(" " + new string('-', 80));
+                int idWidth = 5;
+                int brandWidth = 15;
+                int modelWidth = 15;
+                int yearWidth = 6;
+                int segmentWidth = 10;
+                int typeWidth = 10;
+                int plateWidth = 10;
+                int quantityPaxWidth = 12;
+                int statusWidth = 15;
+                int taxWidth = 10;
+
+                // Imprimir encabezado
+                Console.WriteLine(
+                    "ID".PadRight(idWidth) +
+                    "Brand".PadRight(brandWidth) +
+                    "Model".PadRight(modelWidth) +
+                    "Year".PadRight(yearWidth) +
+                    "Segment".PadRight(segmentWidth) +
+                    "Type".PadRight(typeWidth) +
+                    "Plate".PadRight(plateWidth) +
+                    "QuantityPax".PadRight(quantityPaxWidth) +
+                    "Status".PadRight(statusWidth) +
+                    "Tax".PadRight(taxWidth)
+                );
+
+                // Línea separadora
+                Console.WriteLine(new string('-',
+                    idWidth + brandWidth + modelWidth + yearWidth + segmentWidth +
+                    typeWidth + plateWidth + quantityPaxWidth + statusWidth + taxWidth));
 
                 foreach (var item in vehicle)
                 {
-                    Console.WriteLine($" {item.Id} | {item.Brand} | {item.Model} | {item.Year} | {item.Segment} | {item.Type} | {item.Plate} | {(item.QuantityPax)} | {item.statusVehicle} | S/ {item.Tax.ToString("N2")}");
+                    Console.WriteLine(
+                        item.Id.ToString().PadRight(idWidth) +
+                        item.Brand.PadRight(brandWidth) +
+                        item.Model.PadRight(modelWidth) +
+                        item.Year.ToString().PadRight(yearWidth) +
+                        item.Segment.ToString().PadRight(segmentWidth) +
+                        item.Type.ToString().PadRight(typeWidth) +
+                        item.Plate.PadRight(plateWidth) +
+                        item.QuantityPax.ToString().PadRight(quantityPaxWidth) +
+                        item.statusVehicle.ToString().PadRight(statusWidth) +
+                        ("S/ " + item.Tax.ToString("N2")).PadRight(taxWidth)
+                    );
                 }
             }
 
@@ -801,6 +1068,18 @@ namespace SistemaReservaAutos.UI
 
             var selectedReservation = _reservations[tableIndexCustomer - 1];
 
+            var payments = _paymentService.GetByReservation(selectedReservation.Id);
+            var vehicles = _vehicleService.GetByVehicleId(selectedReservation.VehicleId);
+            vehicles.statusVehicle = StatusVehicle.Available;
+
+            foreach (var payment in payments)
+            {
+                payment.statusPayment = StatusPayment.Void;
+                _paymentService.UpdatePayment(payment);
+            }
+
+            _vehicleService.UpdateStatusVehicle(vehicles);
+
             selectedReservation.statusReservation = StatusReservation.Canceled;
 
             _reservationService.UpdateReservation(selectedReservation);
@@ -821,15 +1100,53 @@ namespace SistemaReservaAutos.UI
             else
             {
 
-                Console.WriteLine("\n ID | FullName | Model | Year | Segment | Type | Plate | DateReserved | DateReturn | status");
-                Console.WriteLine(" " + new string('-', 80));
+                int idWidth = 5;
+                int fullNameWidth = 25;
+                int modelWidth = 15;
+                int yearWidth = 6;
+                int segmentWidth = 10;
+                int typeWidth = 10;
+                int plateWidth = 10;
+                int dateReservedWidth = 12;
+                int dateReturnWidth = 12;
+                int statusWidth = 15;
+
+                // Imprimir encabezado
+                Console.WriteLine(
+                    "ID".PadRight(idWidth) +
+                    "FullName".PadRight(fullNameWidth) +
+                    "Model".PadRight(modelWidth) +
+                    "Year".PadRight(yearWidth) +
+                    "Segment".PadRight(segmentWidth) +
+                    "Type".PadRight(typeWidth) +
+                    "Plate".PadRight(plateWidth) +
+                    "DateReserved".PadRight(dateReservedWidth) +
+                    "DateReturn".PadRight(dateReturnWidth) +
+                    "Status".PadRight(statusWidth)
+                );
+
+                // Línea separadora
+                Console.WriteLine(new string('-',
+                    idWidth + fullNameWidth + modelWidth + yearWidth + segmentWidth +
+                    typeWidth + plateWidth + dateReservedWidth + dateReturnWidth + statusWidth));
 
                 foreach (var item in reservations)
                 {
                     var customer = _customerService.GetCustomerById(item.CustomerId);
                     var vehicle = _vehicleService.GetByVehicleId(item.VehicleId);
 
-                    Console.WriteLine($" {item.Id} | {customer.FullName} | {vehicle.Model} | {vehicle.Year} | {vehicle.Segment} | {vehicle.Type} | {vehicle.Plate} | {(item.ReturnDate.ToShortDateString())} | {item.ReturnDate.ToShortDateString()} | {item.statusReservation}");
+                    Console.WriteLine(
+                        item.Id.ToString().PadRight(idWidth) +
+                        customer.FullName.PadRight(fullNameWidth) +
+                        vehicle.Model.PadRight(modelWidth) +
+                        vehicle.Year.ToString().PadRight(yearWidth) +
+                        vehicle.Segment.ToString().PadRight(segmentWidth) +
+                        vehicle.Type.ToString().PadRight(typeWidth) +
+                        vehicle.Plate.PadRight(plateWidth) +
+                        item.ReservationDate.ToShortDateString().PadRight(dateReservedWidth) +
+                        item.ReturnDate.ToShortDateString().PadRight(dateReturnWidth) +
+                        item.statusReservation.ToString().PadRight(statusWidth)
+                    );
                 }
 
                 Console.ReadKey();
@@ -876,13 +1193,50 @@ namespace SistemaReservaAutos.UI
                 return;
             }
 
-          
+            int indexWidth = 5;
+            int idWidth = 5;
+            int brandWidth = 15;
+            int modelWidth = 15;
+            int yearWidth = 6;
+            int segmentWidth = 10;
+            int statusWidth = 15;
+
             Console.WriteLine("=== Select Vehicle ===");
+
+            // Encabezado
+            Console.WriteLine(
+                "".PadRight(indexWidth) +
+                "ID".PadRight(idWidth) +
+                "Brand".PadRight(brandWidth) +
+                "Model".PadRight(modelWidth) +
+                "Year".PadRight(yearWidth) +
+                "Segment".PadRight(segmentWidth) +
+                "Status".PadRight(statusWidth)
+            );
+
+            // Línea separadora
+            Console.WriteLine(new string('-',
+                indexWidth + idWidth + brandWidth + modelWidth + yearWidth + segmentWidth + statusWidth));
+
             for (int i = 0; i < vehicle.Count; i++)
             {
                 var v = vehicle[i];
-                Console.WriteLine($"[{i + 1}] {v.Id} | {v.Brand} | {v.Model} | {v.Year} | {v.Segment} | {v.statusVehicle}");
+                Console.WriteLine(
+                    $"[{i + 1}]".PadRight(indexWidth) +
+                    v.Id.ToString().PadRight(idWidth) +
+                    v.Brand.PadRight(brandWidth) +
+                    v.Model.PadRight(modelWidth) +
+                    v.Year.ToString().PadRight(yearWidth) +
+                    v.Segment.ToString().PadRight(segmentWidth) +
+                    v.statusVehicle.ToString().PadRight(statusWidth)
+                );
             }
+            //Console.WriteLine("=== Select Vehicle ===");
+            //for (int i = 0; i < vehicle.Count; i++)
+            //{
+            //    var v = vehicle[i];
+            //    Console.WriteLine($"[{i + 1}] {v.Id} | {v.Brand} | {v.Model} | {v.Year} | {v.Segment} | {v.statusVehicle}");
+            //}
 
             // Select Vehicle
             Console.Write("\nSelect Vehicle (number): ");
@@ -966,6 +1320,7 @@ namespace SistemaReservaAutos.UI
                 paymentDate = reservation.ReservationDate,
                 Amount = taxVehicle,
                 paymentMethod = methodPay,
+                statusPayment = StatusPayment.Paid
 
             };
 
@@ -989,6 +1344,7 @@ namespace SistemaReservaAutos.UI
             Console.WriteLine("4. Manage Customers");
             Console.WriteLine("5. Manage Vehicles");
             Console.WriteLine("6. View Payments");
+            Console.WriteLine("7. Return Vehicle");
             Console.WriteLine("0. Exit");
             Console.Write("Enter option: ");
         }

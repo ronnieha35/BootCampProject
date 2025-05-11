@@ -9,6 +9,7 @@ namespace SistemaReservaAutos.Repositories
 {
     public interface IPaymentRepository : IRepository<Payment>
     {
+        
         List<Payment> GetPaymentsByReservation(int reservationId);
         List<Payment> GetPaymentsByDate(DateTime paymentDate);
         List<Payment> GetPaymentsByUser(int id);

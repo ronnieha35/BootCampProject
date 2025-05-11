@@ -10,8 +10,11 @@ namespace SistemaReservaAutos.Services
     public interface IPaymentService
     {
         bool CreatePayment(Payment payment);
+        void DeletePayment(Payment payment); 
+        bool UpdatePayment(Payment payment);
         List<Payment> GetAllPayment();
         List<Payment> GetPaymentByUser(int id);
+        List<Payment> GetByReservation(int id);
         
     }
 }
